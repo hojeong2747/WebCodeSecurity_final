@@ -1,12 +1,11 @@
 package digital.signature;
 
-import javax.crypto.Cipher;
 import javax.crypto.NoSuchPaddingException;
 import java.io.*;
 import java.security.*;
 import java.util.Scanner;
 
-public class createSignature {
+public class CreateSignature {
     public static void main(String[] args) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, SignatureException {
 
         Scanner sc = new Scanner(System.in);
@@ -40,16 +39,26 @@ public class createSignature {
         System.out.print("해시값 저장할 파일 이름 : ");
         String hashFName = sc.nextLine();
 
-        try (PrintWriter out = new PrintWriter(new FileWriter(hashFName))) {
-
-            for (byte bytes : originHash) {
-                out.print(String.format("%02x", bytes) + "\t");
-            }
-            out.println();
-
+        try (FileOutputStream fos = new FileOutputStream(hashFName)) {
+            fos.write(originHash);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        // bin 파일로 저장할 거면 PrintWriter 가 아니라 FileOutputStream 사용하는 게 좋다. 파일에 출력이 잘 안될 수 있음 !
+
+
+//        try (PrintWriter out = new PrintWriter(new FileWriter(hashFName))) {
+//
+//            for (byte bytes : originHash) {
+//                out.print(String.format("%02x", bytes) + "\t");
+//            }
+//            out.println();
+//
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
 
         // 4. 철수의 개인키로 암호화 (-> 전자서명)
         System.out.print("암호화에 사용할 개인키 파일 : ");
@@ -69,7 +78,8 @@ public class createSignature {
             throw new RuntimeException(e);
         }
 
-        Signature sig = Signature.getInstance("SHA256withRSA");
+        String signAlgorithm = "SHA256withRSA";
+        Signature sig = Signature.getInstance(signAlgorithm);
         sig.initSign(privateKey);
         sig.update(originHash);
         byte[] signature = sig.sign(); // 전자서명 생성

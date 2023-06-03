@@ -1,11 +1,10 @@
 package cipher.asymmetric;
 
-import java.awt.*;
 import java.io.*;
 import java.security.*;
 import java.util.Scanner;
 
-public class saveKeyPair {
+public class SaveKeyPair {
     public static void main(String[] args) throws NoSuchAlgorithmException {
 
         // 1. KeyPair 생성
