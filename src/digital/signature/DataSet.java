@@ -19,7 +19,7 @@ public class DataSet implements Serializable {
         this.pubFName = pubFName;
     }
 
-    // getter, setter 필요하면 추가
+    // getter, setter 필요한 경우에 추가
 
 
     public String getOriginFName() {

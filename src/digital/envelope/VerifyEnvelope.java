@@ -85,6 +85,7 @@ public class VerifyEnvelope {
             byte[] signature = dataSet.getSignature(); // 전자서명
             String pubFName = dataSet.getPubFName(); // 공개키 저장 파일
 
+
             // 5. 검증
             byte[] originTxt;
             try (FileInputStream fis = new FileInputStream(originFName)) {
@@ -118,7 +119,6 @@ public class VerifyEnvelope {
             boolean rslt = sig.verify(signature);
 
             System.out.println("서명 검증 결과 : " + rslt);
-
 
 
         } catch (IOException e) {

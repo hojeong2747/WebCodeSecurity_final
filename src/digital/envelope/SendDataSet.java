@@ -17,7 +17,7 @@ public class SendDataSet implements Serializable {
         this.envelope = envelope;
     }
 
-    // getter, setter 필요하면 추가
+    // getter, setter 필요한 경우에 추가
 
     public byte[] getEncryptSet() {
         return encryptSet;
