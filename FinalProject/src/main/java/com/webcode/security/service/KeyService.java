@@ -21,7 +21,6 @@ public class KeyService {
         String publicFName = form.getPublicFName();
         String privateFName = form.getPrivateFName();
 
-
         // 1. KeyPair 생성
         KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
         kpg.initialize(1024);

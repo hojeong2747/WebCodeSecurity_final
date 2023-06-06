@@ -4,6 +4,7 @@ import com.webcode.security.form.AsymmetricForm;
 import com.webcode.security.form.SymmetricForm;
 import com.webcode.security.service.KeyService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -16,6 +17,7 @@ import java.security.NoSuchAlgorithmException;
 
 @Controller
 @RequiredArgsConstructor
+@Slf4j
 public class KeyController {
 
     private final KeyService keyService;
@@ -23,6 +25,8 @@ public class KeyController {
     // 비대칭키 생성, 저장
     @GetMapping(value = "/key/asymmetric")
     public String createAsymmetricForm(Model model) {
+        log.info("key controller");
+
         model.addAttribute("asymmetricForm", new AsymmetricForm());
 
         return "key/createAsymmetric";
@@ -30,6 +34,7 @@ public class KeyController {
 
     @PostMapping(value = "/key/asymmetric")
     public String createAsymmetric(@Valid AsymmetricForm form, BindingResult result, RedirectAttributes redirectAttrs) throws NoSuchAlgorithmException {
+        log.info("key controller");
 
         if (result.hasErrors()) {
             return "key/createAsymmetric";
@@ -46,6 +51,8 @@ public class KeyController {
     // 대칭키 생성, 저장
     @GetMapping(value = "/key/symmetric")
     public String createSymmetricForm(Model model) {
+        log.info("key controller");
+
         model.addAttribute("symmetricForm", new SymmetricForm());
 
         return "key/createSymmetric";
@@ -53,6 +60,7 @@ public class KeyController {
 
     @PostMapping(value = "/key/symmetric")
     public String createSymmetric(@Valid SymmetricForm form, BindingResult result, RedirectAttributes redirectAttrs) throws NoSuchAlgorithmException {
+        log.info("key controller");
 
         if (result.hasErrors()) {
             return "key/createSymmetric";

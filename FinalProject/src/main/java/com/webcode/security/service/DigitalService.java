@@ -160,7 +160,7 @@ public class DigitalService {
 
     }
 
-    public void verifyEnvelope(VerifyEnvelopeForm form) {
+    public boolean verifyEnvelope(VerifyEnvelopeForm form) {
         String sendFName = form.getSendFName();
         String recPrivateFName = form.getRecPrivateFName();
 
@@ -264,6 +264,7 @@ public class DigitalService {
 
             System.out.println("서명 검증 결과 : " + rslt);
 
+            return rslt;
 
         } catch (IOException e) {
             throw new RuntimeException(e);
