@@ -1,0 +1,105 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header" />
+<style>
+ .fieldError {
+ border-color: #bd2130;
+ }
+</style>
+<body>
+<div class="container">
+  <div th:replace="fragments/bodyHeader :: bodyHeader"/>
+  <form role="form" action="/envelope/create" th:object="${createEnvelopeForm}"
+        method="post">
+
+
+    <div class="form-group">
+      <label th:for="originFName">원문 파일 이름</label>
+      <input type="text" th:field="*{originFName}" class="form-control"
+             placeholder="원문 파일 이름을 입력하세요."
+             th:class="${#fields.hasErrors('originFName')}? 'form-control
+fieldError' : 'form-control'">
+      <p th:if="${#fields.hasErrors('originFName')}"
+         th:errors="*{originFName}">Incorrect date</p>
+    </div>
+
+
+    <div class="form-group">
+      <label th:for="originString">원문 파일 내용</label>
+      <input type="text" th:field="*{originString}" class="form-control"
+             placeholder="원문 파일 내용을 입력하세요."
+             th:class="${#fields.hasErrors('originString')}? 'form-control
+fieldError' : 'form-control'">
+      <p th:if="${#fields.hasErrors('originString')}"
+         th:errors="*{originString}">Incorrect date</p>
+    </div>
+
+    <div class="form-group">
+      <label th:for="senderPrivateFName">암호화에 사용할 개인키 파일 이름</label>
+      <input type="text" th:field="*{senderPrivateFName}" class="form-control"
+             placeholder="암호화에 사용할 개인키 파일 이름을 입력하세요."
+             th:class="${#fields.hasErrors('senderPrivateFName')}? 'form-control
+fieldError' : 'form-control'">
+      <p th:if="${#fields.hasErrors('senderPrivateFName')}"
+         th:errors="*{senderPrivateFName}">Incorrect date</p>
+    </div>
+
+    <div class="form-group">
+      <label th:for="saveFName">서명을 저장할 파일 이름</label>
+      <input type="text" th:field="*{saveFName}" class="form-control"
+             placeholder="서명을 저장할 파일 이름을 입력하세요."
+             th:class="${#fields.hasErrors('saveFName')}? 'form-control
+fieldError' : 'form-control'">
+      <p th:if="${#fields.hasErrors('saveFName')}"
+         th:errors="*{saveFName}">Incorrect date</p>
+    </div>
+
+
+    <div class="form-group">
+      <label th:for="senderPublicFName">전송할 공개키 파일 이름</label>
+      <input type="text" th:field="*{senderPublicFName}" class="form-control"
+             placeholder="전송할 공개키 파일 이름을 입력하세요."
+             th:class="${#fields.hasErrors('senderPublicFName')}? 'form-control
+fieldError' : 'form-control'">
+      <p th:if="${#fields.hasErrors('senderPublicFName')}"
+         th:errors="*{senderPublicFName}">Incorrect date</p>
+    </div>
+
+    <div class="form-group">
+      <label th:for="secretFName">대칭키 파일 이름</label>
+      <input type="text" th:field="*{secretFName}" class="form-control"
+             placeholder="대칭키 파일 이름을 입력하세요."
+             th:class="${#fields.hasErrors('secretFName')}? 'form-control
+fieldError' : 'form-control'">
+      <p th:if="${#fields.hasErrors('secretFName')}"
+         th:errors="*{secretFName}">Incorrect date</p>
+    </div>
+
+    <div class="form-group">
+      <label th:for="recPrivateFName">받는 사람의 공개키 파일</label>
+      <input type="text" th:field="*{recPrivateFName}" class="form-control"
+             placeholder="전송할 공개키 파일 이름을 입력하세요."
+             th:class="${#fields.hasErrors('recPrivateFName')}? 'form-control
+fieldError' : 'form-control'">
+      <p th:if="${#fields.hasErrors('recPrivateFName')}"
+         th:errors="*{recPrivateFName}">Incorrect date</p>
+    </div>
+
+    <div class="form-group">
+      <label th:for="sendFName">보낼 파일 이름</label>
+      <input type="text" th:field="*{sendFName}" class="form-control"
+             placeholder="보낼 파일 이름을 입력하세요."
+             th:class="${#fields.hasErrors('sendFName')}? 'form-control
+fieldError' : 'form-control'">
+      <p th:if="${#fields.hasErrors('sendFName')}"
+         th:errors="*{sendFName}">Incorrect date</p>
+    </div>
+
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+  <br/>
+  <div th:replace="fragments/footer :: footer" />
+</div> <!-- /container -->
+</body>
+</html>

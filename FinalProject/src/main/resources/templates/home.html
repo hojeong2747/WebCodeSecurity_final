@@ -1,0 +1,38 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header">
+  <title>Hello</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<div class="container">
+  <div th:replace="fragments/bodyHeader :: bodyHeader" />
+  <div class="jumbotron">
+    <p class="lead">Key Management</p>
+    <p>
+      <a class="btn btn-lg btn-secondary" href="/key/asymmetric">Asymmetric key</a>
+      <a class="btn btn-lg btn-secondary" href="/key/symmetric">Symmetric key</a>
+    </p>
+    <p class="lead">Digital Signature & Envelope</p>
+    <p>
+      <a class="btn btn-lg btn-dark" href="/envelope/create">Create Envelope</a>
+      <a class="btn btn-lg btn-dark" href="/envelope/verify">Verify Envelope</a>
+    </p>
+
+  </div>
+  <div th:replace="fragments/footer :: footer" />
+</div> <!-- /container -->
+
+<script th:inline="javascript">
+
+/*<![CDATA[*/
+    var alertMsg = /*[[${alert}]]*/ null;
+    if (alertMsg !== null && alertMsg !== 'default') {
+        alert(alertMsg);
+    }
+/*]]>*/
+</script>
+
+</script>
+</body>
+</html>
