@@ -3,18 +3,30 @@ package com.webcode.security.service;
 import com.webcode.security.form.AsymmetricForm;
 import com.webcode.security.form.SymmetricForm;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.KeyGenerator;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.*;
 
 @Service
 @RequiredArgsConstructor
 public class KeyService {
+
+    private static int RSA_KEY_SIZE = 1024;
+    public static final int getRsaKeySize() {
+        return RSA_KEY_SIZE;
+    }
+    private static int AES_KEY_SIZE = 128;
+    public static final int getAesKeySize() {
+        return AES_KEY_SIZE;
+    }
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(KeyService.class);
 
     // 비대칭키 생성, 저장
     public void saveAsymmetricKey(AsymmetricForm form) throws NoSuchAlgorithmException {
@@ -23,7 +35,7 @@ public class KeyService {
 
         // 1. KeyPair 생성
         KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
-        kpg.initialize(1024);
+        kpg.initialize(getRsaKeySize());
         KeyPair kp = kpg.generateKeyPair();
 
         PublicKey publicKey = kp.getPublic();
@@ -32,40 +44,25 @@ public class KeyService {
         // 2. byte[]로 가져와서 길이 확인 후 몇 개 찍어보기 (출력 확인)
         byte[] publicKeyBytes = publicKey.getEncoded();
         byte[] privateKeyBytes = privateKey.getEncoded();
-        System.out.println("생성된 공개키 정보: ");
-        System.out.println("키의 길이 (bytes): " + publicKeyBytes.length);
-        for (byte bytes : publicKeyBytes) {
-            System.out.print(String.format("%02x", bytes) + "\t");
-        }
 
-        System.out.println("\n생성된 개인키 정보: ");
-        System.out.println("키의 길이 (bytes): " + privateKeyBytes.length);
-        for (byte bytes : privateKeyBytes) {
-            System.out.print(String.format("%02x", bytes) + "\t");
+        LOGGER.info("공개키의 길이 (bytes): {}", publicKeyBytes.length);
+        StringBuilder hexString2 = new StringBuilder();
+        for (byte bytes : publicKeyBytes) {
+            hexString2.append(String.format("%02x", bytes)).append("\t");
         }
-        System.out.println("\n");
+        LOGGER.info(hexString2.toString());
+
+        LOGGER.info("개인키의 길이 (bytes): {}", privateKeyBytes.length);
+        StringBuilder hexString = new StringBuilder();
+        for (byte bytes : privateKeyBytes) {
+            hexString.append(String.format("%02x", bytes)).append("\t");
+        }
+        LOGGER.info(hexString.toString());
+
 
         // 3. KeyPair 파일에 저장
-        try (FileOutputStream fos = new FileOutputStream(publicFName)) {
-            try (ObjectOutputStream oos = new ObjectOutputStream(fos)) {
-                oos.writeObject(publicKey);
-            }
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        try (FileOutputStream fos = new FileOutputStream(privateFName)) {
-            try (ObjectOutputStream oos = new ObjectOutputStream(fos)) {
-                oos.writeObject(privateKey);
-            }
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
+        saveKeyToFile(publicKey, publicFName);
+        saveKeyToFile(privateKey, privateFName);
 
     }
 
@@ -76,25 +73,35 @@ public class KeyService {
 
         // 1. key 생성
         KeyGenerator kg = KeyGenerator.getInstance("AES");
-        kg.init(128);
+        kg.init(getAesKeySize());
         Key secretKey = kg.generateKey();
 
         // 2. byte[]로 가져와서 길이 확인 후 몇 개 찍어보기 (출력 확인)
         byte[] secretKeyBytes = secretKey.getEncoded();
-        System.out.println("키의 길이 (bytes): " + secretKeyBytes.length);
 
+        LOGGER.info("대칭키(비밀키)의 길이 (bytes): {}", secretKeyBytes.length);
+        StringBuilder hexString = new StringBuilder();
         for (byte bytes : secretKeyBytes) {
-            System.out.print(String.format("%02x", bytes) + "\t");
+            hexString.append(String.format("%02x", bytes)).append("\t");
         }
-        System.out.println();
+        LOGGER.info(hexString.toString());
 
         // 3. Key 파일에 저장
-        try (FileOutputStream fos = new FileOutputStream(fName)) {
-            try (ObjectOutputStream oos = new ObjectOutputStream(fos)) {
-                oos.writeObject(secretKey);
-            }
+        saveKeyToFile(secretKey, fName);
+    }
+
+    private void saveKeyToFile(Serializable key, String fName) {
+        if (Files.exists(Paths.get(fName))) {
+            throw new IllegalStateException("File already exists: " + fName);
+        }
+
+        try (FileOutputStream fos = new FileOutputStream(fName);
+             ObjectOutputStream oos = new ObjectOutputStream(fos)) {
+            oos.writeObject(key);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            LOGGER.error("Failed to write key to file", e);
+            throw new IllegalStateException("Failed to write key to file", e);
         }
     }
+
 }

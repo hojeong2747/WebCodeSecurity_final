@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 
 @Controller
@@ -33,7 +34,7 @@ public class DigitalController {
     }
 
     @PostMapping(value = "/envelope/create")
-    public String createEnvelope(@Valid CreateEnvelopeForm form, BindingResult result, RedirectAttributes redirectAttrs) throws NoSuchAlgorithmException {
+    public String createEnvelope(@Valid CreateEnvelopeForm form, BindingResult result, RedirectAttributes redirectAttrs) throws NoSuchAlgorithmException, ClassNotFoundException {
 
         log.info("digital controller");
 
@@ -60,7 +61,7 @@ public class DigitalController {
     }
 
     @PostMapping(value = "/envelope/verify")
-    public String verifyEnvelope(@Valid VerifyEnvelopeForm form, BindingResult result, RedirectAttributes redirectAttrs) throws NoSuchAlgorithmException {
+    public String verifyEnvelope(@Valid VerifyEnvelopeForm form, BindingResult result, RedirectAttributes redirectAttrs) throws NoSuchAlgorithmException, IOException, ClassNotFoundException {
         log.info("digital controller");
 
         if (result.hasErrors()) {
